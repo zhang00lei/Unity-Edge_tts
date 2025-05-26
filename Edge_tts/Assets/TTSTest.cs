@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Edge_tts_sharp;
@@ -32,12 +34,12 @@ public class TTSTest : MonoBehaviour
             SavePath = Path.Combine(Application.dataPath, "test.mp3")
         };
         var voice = Edge_tts.GetVoice()
-            .FirstOrDefault(x => x.ShortName.Contains(dropdown.options[dropdown.value].text));
-        Edge_tts.SaveAudio(option, voice);
+            .FirstOrDefault(x => x.ShortName.Contains(dropdown.options[dropdown.value].text)); 
+        Edge_tts.SaveAudio(option, voice, () => { Debug.Log("save end"); });
     }
 
     private void OnBtnPlayAudioClick()
-    {
+    { 
         PlayOption option = new PlayOption
         {
             Rate = 0,
@@ -47,6 +49,5 @@ public class TTSTest : MonoBehaviour
             .FirstOrDefault(x => x.ShortName.Contains(dropdown.options[dropdown.value].text));
         var player = Edge_tts.GetPlayer(option, voice);
         player.PlayAsync();
-
     }
 }

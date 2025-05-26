@@ -115,7 +115,7 @@ namespace Edge_tts_sharp
         /// <param name="option">播放参数</param>
         /// <param name="voice">音源参数</param>
         public static void Invoke(PlayOption option, eVoice voice, Action<List<byte>> callback,
-            IProgress<List<byte>> progress = null)
+            IProgress<List<byte>> progress = null, Action onEnd = null)
         {
             var binary_delim = "Path:audio\r\n";
             var sendRequestId = GetGUID();
@@ -185,6 +185,8 @@ namespace Edge_tts_sharp
                 {
                     File.WriteAllBytes(option.SavePath, binary.ToArray());
                 }
+
+                onEnd?.Invoke();
             };
             wss.OnLog += (onmsg) =>
             {
@@ -208,14 +210,14 @@ namespace Edge_tts_sharp
         /// </summary>
         /// <param name="option">播放参数</param>
         /// <param name="voice">音源参数</param>
-        public static void SaveAudio(PlayOption option, eVoice voice)
+        public static void SaveAudio(PlayOption option, eVoice voice, Action onEnd)
         {
             if (string.IsNullOrEmpty(option.SavePath))
             {
                 throw new Exception("保存路径为空，请核对参数后重试.");
             }
 
-            Invoke(option, voice, null);
+            Invoke(option, voice, null, null, onEnd);
         }
 
         /// <summary>
